@@ -59,9 +59,9 @@
 				EB2BE507239524DC00FB933B /* Info.plist */,
 				EB2BE4F9239524DB00FB933B /* AppDelegate.swift */,
 				EB340EC12886058E00968D8F /* Supporting Files */,
+				EB340EBE2886054B00968D8F /* Controllers */,
 				EB340EBC288604CF00968D8F /* Data Model */,
 				EB340EBD2886051B00968D8F /* Views */,
-				EB340EBE2886054B00968D8F /* Controllers */,
 			);
 			path = Todoit;
 			sourceTree = "<group>";
@@ -319,7 +319,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = A64B5QV548;
 				INFOPLIST_FILE = Todoit/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -338,7 +338,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = A64B5QV548;
 				INFOPLIST_FILE = Todoit/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (

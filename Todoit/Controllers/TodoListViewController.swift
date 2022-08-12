@@ -16,19 +16,8 @@ class TodoListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
      
-        let newItem = Item()
-        newItem.title = "Find Mike"
-        itemArray.append(newItem)
-        
-        let newItem2 = Item()
-        newItem2.title = "Buy Eggos"
-        itemArray.append(newItem2)
-        
-        let newItem3 = Item()
-        newItem3.title = "Defeat Venca"
-        itemArray.append(newItem3)
-        
-        
+        loadItems()
+   
     }
 
     //MARK - TableView DataSource Methods
@@ -73,7 +62,6 @@ class TodoListViewController: UITableViewController {
             
             let newItem = Item()
             newItem.title = textField.text!
-            
             self.itemArray.append(newItem)
             
             self.saveItems()
@@ -103,6 +91,18 @@ class TodoListViewController: UITableViewController {
         }
     
         self.tableView.reloadData()
+    }
+    
+    func loadItems() {
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            do {
+                itemArray = try decoder.decode([Item].self, from: data)
+            } catch {
+                print("Error decoding data array, \(error)")
+            }
+            
+        }
     }
     
 }
