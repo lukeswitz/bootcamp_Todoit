@@ -115,13 +115,32 @@ class TodoListViewController: UITableViewController {
         tableView.reloadData()
     }
     
+  
+    
 }
 
 //MARK - SearchBar Delegate methods
 
 extension TodoListViewController: UISearchBarDelegate {
-
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+
+        reloadSearch(with: searchBar)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+
+        if searchBar.text?.count == 0 {
+            loadItems()
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        } else {
+            reloadSearch(with: searchBar)
+        }
+    }
+    
+    func reloadSearch(with searchBar: UISearchBar) {
         
         let request: NSFetchRequest<Item> = Item.fetchRequest()
 
@@ -130,18 +149,6 @@ extension TodoListViewController: UISearchBarDelegate {
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
 
         loadItems(with: request)
-        
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-
-        if searchBar.text?.count == 0 {
-            loadItems()
-        
-            DispatchQueue.main.async {
-                searchBar.resignFirstResponder()
-            }
-        }
     }
 
 }
