@@ -5,6 +5,7 @@
 //
 
 import UIKit
+import CoreData
 
 class TodoListViewController: UITableViewController {
     
@@ -12,12 +13,13 @@ class TodoListViewController: UITableViewController {
     
     //Create NSData Storage Path
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+    
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     override func viewDidLoad() {
         super.viewDidLoad()
-     
+        
         loadItems()
-   
     }
 
     //MARK - TableView DataSource Methods
@@ -46,6 +48,10 @@ class TodoListViewController: UITableViewController {
         
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
+        //update when completed for example
+        itemArray[indexPath.row].setValue("Complete", forKey: "title")
+        
+        //always have to call on the temporary context before write
         saveItems()
         
         tableView.deselectRow(at: indexPath, animated: true)
@@ -60,13 +66,16 @@ class TodoListViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             
-            let newItem = Item()
+            let newItem = Item(context: self.context)
+            
             newItem.title = textField.text!
+            newItem.done = false
+            
             self.itemArray.append(newItem)
             
             self.saveItems()
         }
-            
+        
         alert.addTextField { (alerTextField) in
             alerTextField.placeholder = "create new item"
             textField = alerTextField
@@ -81,27 +90,25 @@ class TodoListViewController: UITableViewController {
     //MARK - Model Manipulation Methods
     
     func saveItems() {
-        let encoder = PropertyListEncoder()
-        
+
         do {
-            let data = try encoder.encode(itemArray)
-            try data.write(to: dataFilePath!)
+            try context.save()
         } catch {
-            print("Error encoding item in array, \(error)")
+            print("Error saving context: \(error)")
         }
-    
+
         self.tableView.reloadData()
     }
     
     func loadItems() {
-        if let data = try? Data(contentsOf: dataFilePath!) {
-            let decoder = PropertyListDecoder()
-            do {
-                itemArray = try decoder.decode([Item].self, from: data)
-            } catch {
-                print("Error decoding data array, \(error)")
-            }
-            
+        
+        //specifying is good practice in agile dev sometimes,
+        //not required but here it is.
+        let request : NSFetchRequest<Item> = Item .fetchRequest()
+        do {
+            itemArray = try context.fetch(request)
+        } catch {
+            print("Error fetching data from context: \(error)")
         }
     }
     

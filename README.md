@@ -3,8 +3,9 @@
 # Todoit ✓
 A todolist app to keep track of all your tasks.
 
-## Goals
-- UserDefaults
-- Core Data
-- Realm.
+## Project Milestones
+1. Small storage w/ UserDefaults
+2. Codable objects 
+3. Core Data & object oriented databases
+4. Realm implementation for fast/easy db deployment
 
