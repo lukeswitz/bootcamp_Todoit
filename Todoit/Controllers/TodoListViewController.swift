@@ -22,7 +22,7 @@ class TodoListViewController: UITableViewController {
         loadItems()
     }
 
-    //MARK - TableView DataSource Methods
+//MARK - TableView DataSource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return itemArray.count
@@ -33,32 +33,36 @@ class TodoListViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         
         cell.textLabel?.text = itemArray[indexPath.row].title
+        cell.textLabel?.textColor = UIColor.white //NOTE forced dark mode
         
         let item = itemArray[indexPath.row]
         
-        //set to check otherwise set to none - terenary operator ==>
+        //NOTE set to check otherwise set to none - terenary operator ==>
         cell.accessoryType = item.done ? .checkmark : .none
         
         return cell
     }
     
-    //MARK - TableView Delegate Methods
+//MARK - TableView Delegate Methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+
+        // NOTE delete items call then save context "try context.save()"
+
+        //        context.delete(itemArray[indexPath.row])
+        //        itemArray.remove(at: indexPath.row)
         
-        //update when completed for example
-        itemArray[indexPath.row].setValue("Complete", forKey: "title")
+        //        itemArray[indexPath.row].setValue("Complete", forKey: "title")
         
-        //always have to call on the temporary context before write
         saveItems()
         
         tableView.deselectRow(at: indexPath, animated: true)
         
     }
     
-    //MARK - Add Items
+//MARK - Add Items
     
     @IBAction func addButtonPressed(_ sender: Any) {
         var textField = UITextField()
@@ -87,10 +91,9 @@ class TodoListViewController: UITableViewController {
         
     }
     
-    //MARK - Model Manipulation Methods
+//MARK - Model Manipulation Methods
     
     func saveItems() {
-
         do {
             try context.save()
         } catch {
@@ -100,16 +103,45 @@ class TodoListViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-    func loadItems() {
+    //NOTE: uses internal and external params with a default
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
         
-        //specifying is good practice in agile dev sometimes,
-        //not required but here it is.
-        let request : NSFetchRequest<Item> = Item .fetchRequest()
         do {
             itemArray = try context.fetch(request)
         } catch {
             print("Error fetching data from context: \(error)")
         }
+        
+        tableView.reloadData()
     }
     
+}
+
+//MARK - SearchBar Delegate methods
+
+extension TodoListViewController: UISearchBarDelegate {
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+
+        loadItems(with: request)
+        
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+
+        if searchBar.text?.count == 0 {
+            loadItems()
+        
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        }
+    }
+
 }
