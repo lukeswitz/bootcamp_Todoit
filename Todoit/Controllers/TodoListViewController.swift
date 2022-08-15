@@ -8,13 +8,12 @@ import UIKit
 import Realm
 import RealmSwift
 
-
-class TodoListViewController: UITableViewController {
+class TodoListViewController: SwipeTableViewController {
     
     var todoItems : Results<Item>?
+
     let realm = try! Realm()
     
-    //if set, go ahead
     var selectedCategory : Category? {
         didSet{
             loadItems()
@@ -23,12 +22,11 @@ class TodoListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        tableView.rowHeight = 65
-    
+
+        tableView.rowHeight = 70
     }
 
-//MARK - TableView DataSource Methods
+    //MARK - TableView DataSource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return todoItems?.count ?? 1
@@ -36,7 +34,7 @@ class TodoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         if let item = todoItems?[indexPath.row] {
             cell.accessoryType = item.done ? .checkmark : .none
@@ -49,7 +47,7 @@ class TodoListViewController: UITableViewController {
         return cell
     }
     
-//MARK - TableView Delegate Methods
+    //MARK - TableView Delegate Methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -107,17 +105,34 @@ class TodoListViewController: UITableViewController {
         
     }
     
-//MARK - Model Manipulation Methods
+    //MARK - Model Manipulation Methods
     
     func loadItems() {
         
         todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
+        
         tableView.reloadData()
    }
-  
+    
+    //MARK - Swipe to delete methods
+    
+    override func updateModel(at indexPath: IndexPath) {
+        
+        if let todoForDeletion = todoItems?[indexPath.row] {
+            do {
+                try realm.write{
+                    self.realm.delete(todoForDeletion)
+                }
+            } catch {
+                print("Error deleting todo \(error)")
+            }
+        }
+    }
+
+    
 }
 
-//MARK - SearchBar Delegate methods
+    //MARK - SearchBar Delegate methods
 
 extension TodoListViewController: UISearchBarDelegate {
 
@@ -149,5 +164,6 @@ extension TodoListViewController: UISearchBarDelegate {
         
         tableView.reloadData()
     }
+ 
 
 }
