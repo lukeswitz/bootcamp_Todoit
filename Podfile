@@ -6,6 +6,7 @@ target 'Todoit' do
   use_frameworks!
 
   # Pods for Todoit
-  pod 'RealmSwift', '~>10' 
+  pod 'RealmSwift'
+  pod 'SwipeCellKit'
 
 end

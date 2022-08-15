@@ -8,6 +8,7 @@ import UIKit
 import Realm
 import RealmSwift
 
+
 class TodoListViewController: UITableViewController {
     
     var todoItems : Results<Item>?
@@ -22,6 +23,8 @@ class TodoListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.rowHeight = 65
     
     }
 
