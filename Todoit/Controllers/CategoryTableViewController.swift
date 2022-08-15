@@ -7,13 +7,12 @@
 //
 
 import UIKit
-import CoreData
 import Realm
 import RealmSwift
 
 class CategoryTableViewController: UITableViewController {
 
-    let realm = try! Realm() //a safe way to use ! declaration
+    let realm = try! Realm()
     
     var categories : Results<Category>?
     
@@ -68,13 +67,13 @@ class CategoryTableViewController: UITableViewController {
             print("Error saving category \(error)")
         }
         
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
     
     func loadCategories() {
         
-        let categories = realm.objects(Category.self)
-
+        categories  = realm.objects(Category.self)
+           
         tableView.reloadData()
     }
     
