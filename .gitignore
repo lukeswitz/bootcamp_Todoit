@@ -2,7 +2,6 @@
 /fastlane/screenshots/
 
 # Xcode
-#
 Swift.gitignore
 /screenshots/
 /Assets/Build/
@@ -18,6 +17,8 @@ DerivedData/
 ## CI Files
 TravisPods
 CIPods
+
+/Pods
 
 ## Various settings
 *.pbxuser
