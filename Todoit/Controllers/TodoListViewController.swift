@@ -24,6 +24,9 @@ class TodoListViewController: SwipeTableViewController {
         super.viewDidLoad()
 
         tableView.rowHeight = 70
+        tableView.separatorStyle = .none
+        navigationItem.backBarButtonItem = UIBarButtonItem(
+            title: "Something Else", style: .plain, target: nil, action: nil)
     }
 
     //MARK - TableView DataSource Methods
@@ -39,7 +42,8 @@ class TodoListViewController: SwipeTableViewController {
         if let item = todoItems?[indexPath.row] {
             cell.accessoryType = item.done ? .checkmark : .none
             cell.textLabel?.text = item.title
-            cell.textLabel?.textColor = UIColor.white //NOTE forced dark mode
+            cell.backgroundColor = UIColor.randomFlat()
+            cell.textLabel?.textColor = UIColor.flatWhite()
         } else {
             cell.textLabel?.text = "No Items Added"
         }
@@ -83,6 +87,7 @@ class TodoListViewController: SwipeTableViewController {
                         let newItem = Item()
                         newItem.title = textField.text!
                         newItem.dateCreated = Date()
+                        newItem.color = UIColor.init(randomFlatColorOf: .dark, withAlpha: 0.9).hexValue()
                         currentCategory.items.append(newItem)
                     }
                 } catch {

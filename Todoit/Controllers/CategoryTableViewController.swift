@@ -9,6 +9,7 @@
 import UIKit
 import Realm
 import RealmSwift
+import ChameleonFramework
 
 class CategoryTableViewController: SwipeTableViewController {
 
@@ -20,6 +21,10 @@ class CategoryTableViewController: SwipeTableViewController {
         super.viewDidLoad()
         loadCategories()
         tableView.rowHeight = 80
+        tableView.separatorStyle = .none
+
+        navigationController?.navigationBar.tintColor = UIColor.flatWhite()
+        
     }
 
     // MARK: - Table view data source
@@ -33,8 +38,12 @@ class CategoryTableViewController: SwipeTableViewController {
         
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
-        cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories added yet"
-        cell.textLabel?.textColor = UIColor.white //NOTE forced dark mode
+        if let category = categories?[indexPath.row] {
+            cell.textLabel?.text = category.name ?? "No categories added yet"
+            cell.backgroundColor = UIColor(hexString: categories?[indexPath.row].color ?? "525e75")
+            cell.textLabel?.textColor = UIColor.flatWhite()
+        }
+        
         
         return cell
     }
@@ -102,8 +111,12 @@ class CategoryTableViewController: SwipeTableViewController {
             
             let newCategory = Category()
             newCategory.name = textField.text!
+            newCategory.color = UIColor.init(randomFlatColorOf: .dark).hexValue()
             
             self.save(category: newCategory)
+
+            //            Cotton candy: #ff595e, #ffca3a, #8ac926, #1982c4 and #6a4c93.
+            //            Forest: #f1ddbf, #525e75, #78938a and #92ba92.
         }
             
         alert.addAction(action)
