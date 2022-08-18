@@ -3,6 +3,9 @@
 # Todoit ✓
 A todolist app to keep track of all your tasks. Written to demonstrate persistent storage options & migrations.    
 
+## Project Topics: 
+Local Data Persistence - User Defaults, Core Data and Realm
+
 ## Project Milestones
 - Storage w/ UserDefaults
 - Migrate to codable objects 
