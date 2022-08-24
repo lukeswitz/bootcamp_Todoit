@@ -19,12 +19,12 @@ class CategoryTableViewController: SwipeTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
         loadCategories()
+
         tableView.rowHeight = 80
         tableView.separatorStyle = .none
 
-        navigationController?.navigationBar.tintColor = UIColor.flatWhite()
-        
     }
 
     // MARK: - Table view data source
@@ -39,7 +39,7 @@ class CategoryTableViewController: SwipeTableViewController {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         if let category = categories?[indexPath.row] {
-            cell.textLabel?.text = category.name ?? "No categories added yet"
+            cell.textLabel?.text = category.name
             cell.backgroundColor = UIColor(hexString: categories?[indexPath.row].color ?? "525e75")
             cell.textLabel?.textColor = UIColor.flatWhite()
         }
@@ -78,9 +78,22 @@ class CategoryTableViewController: SwipeTableViewController {
     }
     
     func loadCategories() {
-        
+
         categories  = realm.objects(Category.self)
            
+        //UI stuff modded for iOS 15
+        guard let navBar = navigationController?.navigationBar else {fatalError("Navigation controller does not exist.")}
+        
+        guard let navBarcolor = UIColor(hexString: "507fe3") else { fatalError()}
+        
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = navBarcolor
+        appearance.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : ContrastColorOf(navBarcolor, returnFlat: true)]
+        
+        navBar.standardAppearance = appearance;
+        navBar.scrollEdgeAppearance = navBar.standardAppearance
+        
         tableView.reloadData()
     }
     
@@ -96,9 +109,8 @@ class CategoryTableViewController: SwipeTableViewController {
                 print("Error deleting category \(error)")
             }
         }
-        
     }
-    
+
     //MARK - Add category
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
