@@ -122,6 +122,10 @@ class TodoListViewController: SwipeTableViewController {
         tableView.reloadData()
     }
     
+    override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        tableView.reloadData()
+    }
+    
     //MARK: - Add New Items
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
@@ -195,8 +199,6 @@ extension TodoListViewController: UISearchBarDelegate {
         reloadSearch(with: searchBar)
         
     }
-    
-    
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text?.count == 0 {
